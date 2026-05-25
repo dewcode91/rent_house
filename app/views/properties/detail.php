@@ -70,14 +70,30 @@
                             <?php endif; ?>
                         </div>
 
-                        <?php if ($property['status'] == 'available'): ?>
-                            <button class="btn btn-primary w-100 mb-2">
-                                <i class="fas fa-envelope me-2"></i>Send Inquiry
+                        <!-- Inquiry Section - Only for authenticated users -->
+                        <?php if ($isAuthenticated): ?>
+                            <?php if ($property['status'] == 'available'): ?>
+                                <button class="btn btn-primary w-100 mb-2">
+                                    <i class="fas fa-envelope me-2"></i>Send Inquiry
+                                </button>
+                            <?php endif; ?>
+                            <button class="btn btn-outline-primary w-100">
+                                <i class="fas fa-heart me-2"></i>Save Property
                             </button>
+                        <?php else: ?>
+                            <!-- Login prompt for unauthenticated users -->
+                            <div class="alert alert-info mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Interested in this property?</strong>
+                                <p class="mb-0 mt-2">Sign in to send inquiries and save properties.</p>
+                            </div>
+                            <a href="<?php echo SITE_URL; ?>/login" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login to Contact Owner
+                            </a>
+                            <a href="<?php echo SITE_URL; ?>/register" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </a>
                         <?php endif; ?>
-                        <button class="btn btn-outline-primary w-100">
-                            <i class="fas fa-heart me-2"></i>Save Property
-                        </button>
                     </div>
                 </div>
             </div>
