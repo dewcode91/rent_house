@@ -1,19 +1,17 @@
-# Enable mod_rewrite
+# Enable mod_rewrite in root directory
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /rent_house/
     
-    # Allow access to public directory and its contents
+    # Preserve existing files and directories
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
     
-    # Don't rewrite requests for existing files or directories EXCEPT public
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Exclude /public/ directory from rewriting
     RewriteCond %{REQUEST_URI} !^/rent_house/public/
     
-    # Rewrite all requests to public/index.php
+    # Route all other requests to public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 </IfModule>
 
@@ -25,7 +23,7 @@
 # Set proper encoding
 AddDefaultCharset UTF-8
 
-# Enable gzip compression
+# Enable gzip compression for better performance
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html
     AddOutputFilterByType DEFLATE text/plain
@@ -41,11 +39,11 @@ AddDefaultCharset UTF-8
     AddOutputFilterByType DEFLATE font/opentype
 </IfModule>
 
-# Cache control headers
+# Browser caching headers
 <IfModule mod_expires.c>
     ExpiresActive On
     
-    # Images
+    # Images - 1 year cache
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
@@ -53,44 +51,50 @@ AddDefaultCharset UTF-8
     ExpiresByType image/webp "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
     
-    # CSS and JavaScript
+    # CSS and JavaScript - 1 month cache
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType text/javascript "access plus 1 month"
     
-    # Fonts
+    # Fonts - 1 year cache
     ExpiresByType font/ttf "access plus 1 year"
     ExpiresByType font/otf "access plus 1 year"
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
     ExpiresByType application/font-woff "access plus 1 year"
     
-    # Default expiration
+    # Default cache for other files
     ExpiresDefault "access plus 2 days"
 </IfModule>
 
-# Security headers
+# Security headers to protect against common vulnerabilities
 <IfModule mod_headers.c>
-    # Set security headers
+    # Prevent MIME type sniffing
     Header set X-Content-Type-Options "nosniff"
+    
+    # Prevent clickjacking attacks
     Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Enable XSS protection
     Header set X-XSS-Protection "1; mode=block"
+    
+    # Control referrer information
     Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
-# Prevent access to sensitive files and folders
+# Block access to sensitive files
 <FilesMatch "^\.(htaccess|htpasswd|env)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# Block access to config files
-<FilesMatch "\.(env|conf|config|sql|log)$">
+# Block access to configuration and database files
+<FilesMatch "\.(env|conf|config|sql|log|md)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# Set proper MIME types
+# Set proper MIME types for web fonts
 AddType application/x-font-woff woff
 AddType application/x-font-woff2 woff2
 AddType application/vnd.ms-fontobject eot
