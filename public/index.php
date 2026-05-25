@@ -27,7 +27,7 @@ require_once __DIR__ . '/../app/controllers/TenantController.php';
 
 // Get the request path
 $request = trim($_SERVER['REQUEST_URI'], '/');
-$request = str_replace('rent_house', '', $request);
+$request = str_replace(BASE_PATH, '', $request);
 $request = trim($request, '/');
 
 // Parse the request
