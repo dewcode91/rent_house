@@ -25,15 +25,16 @@ require_once __DIR__ . '/../app/controllers/AdminController.php';
 require_once __DIR__ . '/../app/controllers/OwnerController.php';
 require_once __DIR__ . '/../app/controllers/TenantController.php';
 
-// Get the request path
+// Get the request path from REQUEST_URI
 $request = trim($_SERVER['REQUEST_URI'], '/');
 
-// Remove the base path from the request
-// Handle both with and without BASE_PATH
-if (strpos($request, 'rent_house') === 0) {
-    $request = substr($request, strlen('rent_house'));
+// Remove the base path (/rent_house) from the request
+// The REQUEST_URI contains: /rent_house/login (even though routed to public/index.php)
+if (strpos($request, 'rent_house/') === 0) {
+    $request = substr($request, strlen('rent_house/'));
 }
 
+// Remove any remaining slashes
 $request = trim($request, '/');
 
 // Handle empty request
