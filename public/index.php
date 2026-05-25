@@ -27,13 +27,25 @@ require_once __DIR__ . '/../app/controllers/TenantController.php';
 
 // Get the request path
 $request = trim($_SERVER['REQUEST_URI'], '/');
-$request = str_replace(BASE_PATH, '', $request);
+
+// Remove the base path from the request
+// Handle both with and without BASE_PATH
+if (strpos($request, 'rent_house') === 0) {
+    $request = substr($request, strlen('rent_house'));
+}
+
 $request = trim($request, '/');
 
-// Parse the request
-$parts = explode('/', $request);
-$action = $parts[0] ?? 'home';
-$param = $parts[1] ?? null;
+// Handle empty request
+if (empty($request)) {
+    $action = 'home';
+    $param = null;
+} else {
+    // Parse the request
+    $parts = explode('/', $request);
+    $action = $parts[0] ?? 'home';
+    $param = $parts[1] ?? null;
+}
 
 // Route the request
 try {
@@ -139,7 +151,6 @@ try {
             break;
 
         // Main routes
-        case '':
         case 'home':
             $controller = new MainController($pdo);
             $controller->index();
