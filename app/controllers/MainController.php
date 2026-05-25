@@ -11,6 +11,9 @@ require_once __DIR__ . '/../middleware/Auth.php';
 
 class MainController extends Controller
 {
+    /**
+     * Home page - Public access
+     */
     public function index()
     {
         $propertyModel = new Property($this->pdo);
@@ -19,6 +22,9 @@ class MainController extends Controller
         $this->view('home', ['properties' => $properties]);
     }
 
+    /**
+     * About page - Public access
+     */
     public function about()
     {
         $pageModel = new Page($this->pdo);
@@ -27,6 +33,9 @@ class MainController extends Controller
         $this->view('about', ['page' => $page]);
     }
 
+    /**
+     * Contact page - Public access
+     */
     public function contact()
     {
         $pageModel = new Page($this->pdo);
@@ -35,6 +44,11 @@ class MainController extends Controller
         $this->view('contact', ['page' => $page]);
     }
 
+    /**
+     * Browse all properties - Public access (no authentication required)
+     * 
+     * Permission: EVERYONE (Guest, Tenant, Owner, Admin)
+     */
     public function properties()
     {
         $propertyModel = new Property($this->pdo);
@@ -53,6 +67,12 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * View property details - Public access (no authentication required)
+     * 
+     * Permission: EVERYONE (Guest, Tenant, Owner, Admin)
+     * Note: Send inquiry button only shows for authenticated users
+     */
     public function property()
     {
         $id = $_GET['id'] ?? null;
@@ -71,13 +91,21 @@ class MainController extends Controller
         $reviews = $reviewModel->getApproved($id);
         $avgRating = $reviewModel->getAverageRating($id);
 
+        // Check if user is authenticated (can send inquiry)
+        $canSendInquiry = Auth::isAuthenticated();
+
         $this->view('properties.detail', [
             'property' => $property,
             'reviews' => $reviews,
-            'avgRating' => $avgRating
+            'avgRating' => $avgRating,
+            'canSendInquiry' => $canSendInquiry,
+            'isAuthenticated' => Auth::check()
         ]);
     }
 
+    /**
+     * Privacy page - Public access
+     */
     public function privacy()
     {
         $pageModel = new Page($this->pdo);
