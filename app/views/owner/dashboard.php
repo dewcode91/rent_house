@@ -8,7 +8,7 @@
                 <nav class="nav flex-column">
                     <a class="nav-link active" href="<?php echo SITE_URL; ?>/owner/dashboard">📊 Dashboard</a>
                     <a class="nav-link" href="<?php echo SITE_URL; ?>/owner/properties">🏠 My Properties</a>
-                    <a class="nav-link" href="<?php echo SITE_URL; ?>/owner/add_property">➕ Add Property</a>
+                    <a class="nav-link" href="<?php echo SITE_URL; ?>/owner/add-property">➕ Add Property</a>
                     <a class="nav-link" href="<?php echo SITE_URL; ?>/owner/inquiries">📧 Inquiries</a>
                 </nav>
             </div>
@@ -66,7 +66,7 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Recent Properties</h5>
-                    <a href="<?php echo SITE_URL; ?>/owner/add_property" class="btn btn-light btn-sm">+ Add Property</a>
+                    <a href="<?php echo SITE_URL; ?>/owner/add-property" class="btn btn-light btn-sm">+ Add Property</a>
                 </div>
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
@@ -96,7 +96,7 @@
                                     <td><?php echo date('M d, Y', strtotime($property['created_at'])); ?></td>
                                     <td>
                                         <a href="<?php echo SITE_URL; ?>/properties/<?php echo $property['id']; ?>" class="btn btn-sm btn-info">View</a>
-                                        <a href="<?php echo SITE_URL; ?>/owner/edit_property?id=<?php echo $property['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                                        <a href="<?php echo SITE_URL; ?>/owner/edit-property?id=<?php echo $property['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
