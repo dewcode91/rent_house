@@ -11,12 +11,12 @@
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
-    # Don't rewrite requests for existing files
+    # Don't rewrite requests for existing files or directories
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     
-    # Rewrite all requests to index.php
-    RewriteRule ^(.*)$ index.php?/$1 [L]
+    # Rewrite all requests to public/index.php
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
 </IfModule>
 
 # Disable directory listing
