@@ -5,6 +5,7 @@
 
 define('SITE_NAME', 'Rent House App');
 define('SITE_URL', 'http://localhost/rent_house');
+define('BASE_PATH', '/rent_house');
 define('UPLOAD_DIR', __DIR__ . '/../public/uploads/');
 
 // User Roles
