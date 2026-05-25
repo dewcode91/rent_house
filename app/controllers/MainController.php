@@ -1,6 +1,10 @@
 <?php
 /**
- * Main Controller
+ * Main Controller - Handles all public routes
+ * 
+ * PERMISSIONS:
+ * ✅ PUBLIC (No Auth Required): home, about, contact, properties, property detail, privacy
+ * ❌ PROTECTED: None (all main controller routes are public)
  */
 
 require_once 'Controller.php';
@@ -12,7 +16,8 @@ require_once __DIR__ . '/../middleware/Auth.php';
 class MainController extends Controller
 {
     /**
-     * Home page - Public access
+     * Home page - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access
      */
     public function index()
     {
@@ -23,7 +28,8 @@ class MainController extends Controller
     }
 
     /**
-     * About page - Public access
+     * About page - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access
      */
     public function about()
     {
@@ -34,7 +40,8 @@ class MainController extends Controller
     }
 
     /**
-     * Contact page - Public access
+     * Contact page - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access
      */
     public function contact()
     {
@@ -45,9 +52,10 @@ class MainController extends Controller
     }
 
     /**
-     * Browse all properties - Public access (no authentication required)
+     * Browse all properties - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access (no authentication required)
      * 
-     * Permission: EVERYONE (Guest, Tenant, Owner, Admin)
+     * Permission: EVERYONE
      */
     public function properties()
     {
@@ -68,10 +76,19 @@ class MainController extends Controller
     }
 
     /**
-     * View property details - Public access (no authentication required)
+     * View property details - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access (no authentication required)
      * 
-     * Permission: EVERYONE (Guest, Tenant, Owner, Admin)
-     * Note: Send inquiry button only shows for authenticated users
+     * Permission: EVERYONE
+     * Features:
+     * - Guests: Can view property but see login/register prompts to contact owner
+     * - Authenticated: Can send inquiries to owner
+     * 
+     * Data passed to view:
+     * - $property: Property details
+     * - $reviews: Approved reviews
+     * - $avgRating: Average rating
+     * - $isAuthenticated: Boolean to show/hide inquiry button
      */
     public function property()
     {
@@ -92,19 +109,19 @@ class MainController extends Controller
         $avgRating = $reviewModel->getAverageRating($id);
 
         // Check if user is authenticated (can send inquiry)
-        $canSendInquiry = Auth::isAuthenticated();
+        $isAuthenticated = Auth::check();
 
         $this->view('properties.detail', [
             'property' => $property,
             'reviews' => $reviews,
             'avgRating' => $avgRating,
-            'canSendInquiry' => $canSendInquiry,
-            'isAuthenticated' => Auth::check()
+            'isAuthenticated' => $isAuthenticated
         ]);
     }
 
     /**
-     * Privacy page - Public access
+     * Privacy page - PUBLIC ACCESS
+     * ✅ Guest, Tenant, Owner, Admin can access
      */
     public function privacy()
     {
