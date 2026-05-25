@@ -3,17 +3,15 @@
     RewriteEngine On
     RewriteBase /rent_house/
     
-    # Remove www from URL (optional - uncomment if needed)
-    # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-    # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    # Allow access to public directory and its contents
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
     
-    # Redirect HTTP to HTTPS (optional - uncomment if needed)
-    # RewriteCond %{HTTPS} off
-    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-    # Don't rewrite requests for existing files or directories
+    # Don't rewrite requests for existing files or directories EXCEPT public
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/rent_house/public/
     
     # Rewrite all requests to public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
