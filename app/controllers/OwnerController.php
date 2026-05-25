@@ -18,6 +18,10 @@ class OwnerController extends Controller
         Auth::requireOwner();
     }
 
+    /**
+     * Owner Dashboard
+     * ✅ Protected - Owner Only
+     */
     public function dashboard()
     {
         $propertyModel = new Property($this->pdo);
@@ -30,13 +34,24 @@ class OwnerController extends Controller
         $pendingInquiries = $inquiryModel->getByStatus('pending');
         $pendingCount = count($pendingInquiries);
 
+        // Prepare stats array matching view expectations
+        $stats = [
+            'total_properties' => $totalProperties,
+            'active_properties' => $totalProperties,
+            'total_inquiries' => $pendingCount,
+            'average_rating' => 0
+        ];
+
         $this->view('owner.dashboard', [
-            'totalProperties' => $totalProperties,
-            'pendingInquiries' => $pendingCount,
-            'properties' => $properties
+            'stats' => $stats,
+            'recent_properties' => array_slice($properties, 0, 5)
         ]);
     }
 
+    /**
+     * List owner's properties
+     * ✅ Protected - Owner Only
+     */
     public function properties()
     {
         $propertyModel = new Property($this->pdo);
@@ -57,6 +72,10 @@ class OwnerController extends Controller
         ]);
     }
 
+    /**
+     * Add new property
+     * ✅ Protected - Owner Only
+     */
     public function addProperty()
     {
         $typeModel = new PropertyType($this->pdo);
@@ -117,6 +136,10 @@ class OwnerController extends Controller
         }
     }
 
+    /**
+     * Edit property
+     * ✅ Protected - Owner Only (can only edit own properties)
+     */
     public function editProperty()
     {
         $id = $_GET['id'] ?? null;
@@ -186,6 +209,10 @@ class OwnerController extends Controller
         }
     }
 
+    /**
+     * View inquiries for owner's properties
+     * ✅ Protected - Owner Only
+     */
     public function inquiries()
     {
         $inquiryModel = new Inquiry($this->pdo);
@@ -211,6 +238,10 @@ class OwnerController extends Controller
         ]);
     }
 
+    /**
+     * Answer tenant inquiry
+     * ✅ Protected - Owner Only
+     */
     public function answerInquiry()
     {
         $id = $_GET['id'] ?? null;
@@ -243,6 +274,9 @@ class OwnerController extends Controller
         }
     }
 
+    /**
+     * Upload property image
+     */
     private function uploadImage($file)
     {
         if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
